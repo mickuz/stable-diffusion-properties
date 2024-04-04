@@ -15,7 +15,7 @@ class DogCatDataset(Dataset):
 
     def __getitem__(self, idx):
         filename = self.metadata_df.loc[idx]["file_name"]
-        prompt = self.metadata_df.loc[idx]["prompt"]
+        prompt = self.metadata_df.loc[idx]["text"]
         path = os.path.join(self.data_dir, filename)
         image = Image.open(path)
 
@@ -32,7 +32,7 @@ class DogCatDataset(Dataset):
         labels = [filename.split(".")[0] for filename in filenames]
         prompts = [prompt + label for label in labels]
 
-        df = pd.DataFrame({"file_name": filenames, "prompt": prompts})
+        df = pd.DataFrame({"file_name": filenames, "text": prompts})
 
         return df
 
@@ -63,4 +63,3 @@ if __name__ == "__main__":
     dataset = DogCatDataset(args.data_dir, prompt=args.prompt)
     dataset.save_metadata_df()
     dataset.push_to_hugging_face(args.repo_name)
-    
