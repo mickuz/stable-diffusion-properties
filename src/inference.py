@@ -7,7 +7,10 @@ from diffusers import DiffusionPipeline
 
 def setup_model(model_id, device):
     model = DiffusionPipeline.from_pretrained(
-        model_id, variant="fp16", use_safetensors=True
+        model_id,
+        variant="fp16",
+        torch_dtype=torch.float16,
+        use_safetensors=True
     ).to(device)
 
     return model
@@ -17,10 +20,12 @@ def run_inference(model, prompt, device, iteration=0):
     generator = torch.Generator(device=device)
     generator.manual_seed(iteration)
 
+    output_dir_name = prompt.lower().replace(" ", "-") + f"-{iteration}"
+
     with torch.no_grad():
         with trace(model) as tc:
             model(prompt=prompt, generator=generator)
-            experiment = tc.to_experiment(f"experiment-dir-{iteration}")
+            experiment = tc.to_experiment(output_dir_name)
             experiment.save()
 
 
