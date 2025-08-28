@@ -2,7 +2,7 @@
 
 accelerate config default
 
-export MODEL_NAME="CompVis/stable-diffusion-v1-4"
+export MODEL_NAME="runwayml/stable-diffusion-v1-5"
 
 accelerate launch --mixed_precision="fp16" ~/projects/diffusers/examples/text_to_image/train_text_to_image.py \
   --pretrained_model_name_or_path=$MODEL_NAME \
